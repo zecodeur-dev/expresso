@@ -12,29 +12,16 @@ const notApiPaths = [
   "app/routes/web",
   "app/views",
   "public",
-  "app/middlewares/errorHandler.js",
   "server.js",
+  "app/middlewares/errorHandler.js",
   "app/routes/routes.js",
   "core/layout.js",
+  "core/tailwind.js",
   "core/setup.js",
+  "postcss.config.js",
+  "tailwind.config.js",
+  "package.json",
 ];
-
-const apiPaths = [
-  "app/middlewares/errorHandler.api.js",
-  "server.api.js",
-  "core/setup.api.js",
-  "app/routes/routes.api.js",
-];
-
-const namesMap = {
-  ".git.template": ".git",
-  ".gitignore.template": ".gitignore",
-  ".env.template": ".env",
-  "errorHandler.api.js": "errorHandler.js",
-  "server.api.js": "server.js",
-  "setup.api.js": "setup.js",
-  "routes.api.js": "routes.js",
-};
 
 function toFolderName(str = "") {
   return str
@@ -138,40 +125,28 @@ async function createProject(projectName) {
   const IS_API_ONLY = prompt.apiOnly;
 
   function canCopyPath(path = "") {
-    if (path.includes(".keep")) return false;
+    if (path.includes("node_modules") || path.includes(".keep")) return false;
 
-    if (!IS_API_ONLY) return true;
+    path = path.replaceAll("\\", "/");
+    if (IS_API_ONLY) {
+      const isNotApi = notApiPaths.find((p) => path.includes(p));
+      if (isNotApi) return false;
+    } else if (path.includes(".api")) return false;
 
-    let templatePath = path.replaceAll("\\", "/");
-    if (notApiPaths.includes(templatePath)) {
-      return false;
-    }
-
-    for (let notApiPath of notApiPaths) {
-      if (templatePath.startsWith(notApiPath)) {
-        return false;
-      }
-    }
     return true;
   }
 
   async function copyPath(templateToCopy) {
-    if (!canCopyPath(templateToCopy)) {
-      fs.removeSync(path.join(projectPath, templateToCopy));
-      return;
-    }
-    var templateName = templateToCopy;
-    for (let nameToReplace in namesMap) {
-      templateName = templateName.replaceAll(
-        nameToReplace,
-        namesMap[nameToReplace]
-      );
-    }
+    if (!canCopyPath(templateToCopy)) return;
 
-    await fs.copy(
-      path.join(templatePath, templateToCopy),
-      path.join(projectPath, templateName)
-    );
+    let templateName = templateToCopy;
+    templateName = templateName.replaceAll(".api", "");
+    templateName = templateName.replaceAll(".template", "");
+
+    const from = path.join(templatePath, templateToCopy);
+    const to = path.join(projectPath, templateName);
+
+    await fs.copy(from,to);
     await setVarsInFile(path.join(projectPath, templateName), vars);
   }
   var defaultPort = parseInt(Math.random() * 50000 + 3000);
@@ -277,10 +252,7 @@ async function createProject(projectName) {
     for (let templateToCopy of templatesToCopy) {
       await copyPath(templateToCopy);
     }
-    for (let templateToCopy of apiPaths) {
-      if (IS_API_ONLY) await copyPath(templateToCopy);
-      fs.removeSync(path.join(projectPath, templateToCopy));
-    }
+
     console.clear();
     console.log(`Created project at ${projectPath}`);
     generateJWT(projectBasePath);
@@ -503,7 +475,11 @@ async function generateController(controllerName) {
       {
         type: "confirm",
         name: "overwrite",
-        message: "Controller " + suffix + controllerName + " already exists, overwrite?",
+        message:
+          "Controller " +
+          suffix +
+          controllerName +
+          " already exists, overwrite?",
         default: false,
       },
     ]);

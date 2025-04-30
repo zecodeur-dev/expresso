@@ -1,16 +1,13 @@
 const cors = require("cors");
-const path = require("path");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const config = require("@/config");
-const express = require("express");
 
 const baseMiddlewares = [
   cors(),
   cookieParser(config.jwtSecret),
   bodyParser.json({ limit: config.parserJsonLimit }),
   bodyParser.urlencoded({ extended: true, limit: config.parserLimit }),
-  express.static(path.resolve(buildDir)),
 
   require("@services/routes").middleware,
   require("@services/lang").middleware(false),
