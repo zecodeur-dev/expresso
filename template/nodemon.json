@@ -1,0 +1,4 @@
+{
+  "watch": [".env", "*.js", "translations"],
+  "ext": "js,ejs,html,json"
+}

@@ -1,0 +1,71 @@
+<main class="flex min-h-screen flex-col items-center justify-between p-8 lg:p-24 pt-8">
+  <div class="z-10 max-w-5xl w-full items-center justify-end lg:justify-between font-mono text-sm flex flex-wrap ">
+    <div class="flex gap-4 items-center ">
+      <% if (locals.user?.imagse) { %>
+      <img src="<%= locals.user.image %>" alt="" class="rounded-full object-cover aspect-square w-10 bg-secondary">
+      <% } else {%>
+        <div class="rounded-full object-cover aspect-square  w-10 bg-primary text-primary-foreground flex items-center justify-center text-lg uppercase font-bold">
+          <%= locals.user.name[0] %>
+        </div>
+      <% } %>
+      <details class="dropdown" data-onchange="changeLang">
+        <summary>
+          <%= lang.toUpperCase() %>
+          <%- icons("ChevronDown","dropdown-indicator") %>
+        </summary>
+
+        <ul class="menu dropdown-content">
+          <% langs.forEach(l => { %>
+          <li value="<%= l %>" <% if (l==lang) { %> class="!text-primary" <% } %>><%= l.toUpperCase() %></li>
+          <% }) %>
+        </ul>
+      </details>
+
+      <p data-action="changeTheme">
+        <%- icons("Sun","hidden dark:block") %>
+        <%- icons("Moon","dark:hidden") %>
+      </p>
+      <p class="mx-2 border border-1 dark:border-gray-800 border-slate-100 px-4 py-2 bg-slate-50 dark:bg-gray-900 rounded-full text-xs">
+        <%= tr["Get started by editing"] %>&nbsp;
+        <code class="font-mono font-bold">@views/pages/index.ejs</code>
+      </p>
+    </div>
+    <div class="flex items-end justify-center ">
+      <a href="http://expresso.zecodeur.com/docs" class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
+        <p class="text-foreground">
+          <%= tr["see doc"] %>
+          <%- icons("ArrowRight", "inline-block h-4 w-4 transition-transform group-hover:translate-x-1 motion-reduce:transform-none") %>
+        </p>
+      </a>
+    </div>
+  </div>
+
+  <div class="relative flex place-items-center flex-col gap-2 text-center">
+    <p><%= tr.greetings %></p>
+    <h1>
+      <%= `${tr.welcome} ${global().appname}` %>
+    </h1>
+
+  </div>
+
+
+  <footer>
+    <div class="container mx-auto flex justify-center items-center space-x-8">
+      <a href="https://github.com/zecodeur-dev/expresso" target="_blank" rel="noopener noreferrer" class="text-foreground">
+        <%- icons("Github", "h-6 w-6") %>
+      </a>
+      <a href="https://www.linkedin.com/company/zecodeur" target="_blank" rel="noopener noreferrer" class="text-foreground">
+        <%- icons("Linkedin", "h-6 w-6") %>
+      </a>
+      <a href="http://expresso.zecodeur.com" target="_blank" rel="noopener noreferrer" class="text-foreground">
+        <%- icons("Globe", "h-6 w-6") %>
+      </a>
+      <a href="mailto:mail@zecodeur.com" class="text-foreground">
+        <%- icons("Mail", "h-6 w-6") %>
+      </a>
+    </div>
+  </footer>
+
+  <%- _LogoutButton  %>
+
+</main>

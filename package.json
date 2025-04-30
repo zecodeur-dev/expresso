@@ -1,0 +1,37 @@
+{
+  "name": "@zecodeur/expresso",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "A simple CLI for managing express.js project",
+  "keywords": [
+    "express",
+    "cli",
+    "boilerplate",
+    "generator",
+    "express.js",
+    "node.js"
+  ],
+  "homepage": "https://expresso.zecodeur.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zecodeur-dev/expresso.git"
+  },
+  "bin": {
+    "expresso": "index.js"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^8.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "D3R50N",
+  "bugs": {
+    "url": "https://github.com/byzard-org/expresso/issues"
+  }
+}

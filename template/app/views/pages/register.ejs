@@ -1,0 +1,70 @@
+<title><%= global("appname") %> | <%= tr.register_t?.toUpperCase() %></title>
+
+
+<body class="justify-center items-center bg-base-200">
+  <div class="bg-base-300 absolute left-0 w-1/2 h-full z-0"></div>
+  <div class="mx-auto w-full max-w-max rounded-md p-6 shadow bg-card z-10">
+    <div>
+      <div class="flex flex-col items-center">
+        <h1 class="text-3xl font-black text-foreground">
+          <%= tr.register_t?.toUpperCase() %>
+        </h1>
+        <%- _AuthTitle %>
+
+      </div>
+
+      <% 
+      // handle redirect
+      let submit = routes.register;
+      let redirectPath="";
+      if(locals.redirect) redirectPath="?redirect="+redirect;
+      submit+=redirectPath;
+      %>
+
+      <form action="<%= submit %>" method="post" id="register-form" enctype="multipart/form-data" class="flex flex-col gap-3 mt-4 mb-2">
+
+        <%- Input({ name: "name" , id: "name" , placeholder: tr.fullname, required: true, value: locals.body?.name,
+          icon: "User" }) %> <%- Input({ name: "email" , id: "email" , placeholder: tr.email_address, required: true,
+            value: locals.body?.email, icon: "Mail" }) %> <%- Input({ type: "password" , name: "password" ,
+              id: "password" , placeholder: tr.password, required: true, icon: "Lock" }) %> <%- Input({ type: "password"
+                , name: "password-repeat" , id: "password-repeat" , placeholder: tr.repeat_password, required: true,
+                icon: "Lock" }) %>
+
+        <label for="image" id="img_label" class="overflow-hidden whitespace-nowrap truncate px-6 text-center text-muted-foreground cursor-pointer hover:bg-base-100 transition duration-200 <%= global("class").input%>">
+          <%= tr.choose_profile_picture %>
+        </label>
+        <input type="file" name="image" id="image" accept="image/*" class="hidden" />
+      </form>
+
+
+      <%- Button({label:tr.register,type:"submit",form:"register-form",classes:"mt-4 w-full bg-primary text-primary-foreground",icon:"ArrowRight", iconClass:"-translate-x-full opacity-0"}) %>
+
+      <span class="text-muted-foreground text-center text-sm flex gap-1 flex-wrap items-center justify-center mt-4">
+        <%= tr.already_have_account %>
+        <a href="<%= routes.login+redirectPath %>" class="font-medium text-primary">
+          <%= tr.login %>
+        </a>
+      </span>
+
+      <%- _ErrorMessage %>
+
+    </div>
+  </div>
+  </div>
+
+
+
+  <script>
+    const img_label = document.getElementById("img_label");
+    const image = document.getElementById("image");
+
+    image.addEventListener("change", () => {
+      const file = image.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        img_label.innerText = file.name;
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
+</body>

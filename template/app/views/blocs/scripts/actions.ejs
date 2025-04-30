@@ -1,0 +1,45 @@
+  <script>
+    document.addEventListener("click", (e) => {
+      e.stopImmediatePropagation();
+
+      let currentTarget = e.target;
+      if (!currentTarget.dataset.action) {
+        currentTarget = e.target.closest("[data-action]");
+      }
+
+      const action = currentTarget?.dataset.action;
+      if (currentTarget && action && typeof window[action] === "function") {
+        let args = currentTarget.dataset.actionArgs;
+        if (args) {
+          try {
+            args = JSON.parse(args)
+          } catch (_) {}
+        }
+        window[action](args);
+      }
+    });
+
+    document.querySelectorAll(".dropdown-content").forEach(dc => dc.addEventListener("click", e => {
+      let target = e.target;
+      
+      if (!target.getAttribute("value"))
+        target = target.closest("[value]");
+
+
+      const dropdown = target?.closest(".dropdown");
+      if (!dropdown) return;
+      dropdown.removeAttribute("open");
+
+      const value = target.getAttribute("value");
+      if (!value) return;
+
+      const changeAction = dropdown.dataset.onchange;
+      if (!changeAction) return;
+
+      const onChange = window[changeAction];
+      if (typeof onChange != "function") return;
+
+      onChange(value);
+
+    }))
+  </script>

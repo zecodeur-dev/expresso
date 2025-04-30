@@ -1,0 +1,7 @@
+{
+  "main": "server.js",
+  "tailwind": {
+    "logs": false,
+    "output": "public/css/style.css"
+  }
+}

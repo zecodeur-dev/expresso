@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "*"
+            ],
+            "@app/*": [
+                "app/*"
+            ],
+            "@controllers/*": [
+                "app/controllers/*"
+            ],
+            "@services/*": [
+                "app/services/*"
+            ],
+            "@middlewares/*": [
+                "app/middlewares/*"
+            ],
+            "@models/*": [
+                "app/models/*"
+            ],
+            "@routes/*": [
+                "app/routes/*"
+            ],
+            "@utils/*": [
+                "app/utils/*"
+            ],
+            "@views/*": [
+                "app/views/*"
+            ]
+        },
+    },
+    "exclude": ["node_modules"]
+}
