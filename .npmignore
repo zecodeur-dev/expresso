@@ -4,7 +4,4 @@ template/seeds/*
 template/generated/*
 template/uploads/*
 
-!template/seeds/.keep
-!template/generated/.keep
-!template/uploads/.keep
-
+!template/*/.keep

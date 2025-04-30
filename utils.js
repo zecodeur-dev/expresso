@@ -138,6 +138,8 @@ async function createProject(projectName) {
   const IS_API_ONLY = prompt.apiOnly;
 
   function canCopyPath(path = "") {
+    if (path.includes(".keep")) return false;
+
     if (!IS_API_ONLY) return true;
 
     let templatePath = path.replaceAll("\\", "/");
