@@ -8,7 +8,6 @@ const templatePath = path.join(__dirname, "template");
 
 const notApiPaths = [
   "app/controllers/web",
-  "app/controllers/client",
   "app/middlewares/web",
   "app/routes/web",
   "app/views",
