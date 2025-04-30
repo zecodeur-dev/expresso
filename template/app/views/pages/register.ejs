@@ -23,12 +23,13 @@
 
       <form action="<%= submit %>" method="post" id="register-form" enctype="multipart/form-data" class="flex flex-col gap-3 mt-4 mb-2">
 
-        <%- Input({ name: "name" , id: "name" , placeholder: tr.fullname, required: true, value: locals.body?.name,
-          icon: "User" }) %> <%- Input({ name: "email" , id: "email" , placeholder: tr.email_address, required: true,
-            value: locals.body?.email, icon: "Mail" }) %> <%- Input({ type: "password" , name: "password" ,
-              id: "password" , placeholder: tr.password, required: true, icon: "Lock" }) %> <%- Input({ type: "password"
-                , name: "password-repeat" , id: "password-repeat" , placeholder: tr.repeat_password, required: true,
-                icon: "Lock" }) %>
+        <%- Input({ name: "name" , id: "name" , placeholder: tr.fullname, required: true, value: locals.body?.name, icon: "User" }) %> 
+
+        <%- Input({ name: "email" , id: "email", autocomplete:"username",  placeholder: tr.email_address, required: true, value: locals.body?.email, icon: "Mail" }) %>
+
+        <%- Input({ type: "password" , name: "password", autocomplete:"new-password", id: "password" , placeholder: tr.password, required: true, icon: "Lock" }) %>
+         
+        <%- Input({ type: "password", name: "password-repeat" , autocomplete:"new-password", id: "password-repeat" , placeholder: tr.repeat_password, required: true, icon: "Lock" }) %>
 
         <label for="image" id="img_label" class="overflow-hidden whitespace-nowrap truncate px-6 text-center text-muted-foreground cursor-pointer hover:bg-base-100 transition duration-200 <%= global("class").input%>">
           <%= tr.choose_profile_picture %>

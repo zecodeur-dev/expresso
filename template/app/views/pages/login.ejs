@@ -10,7 +10,7 @@
         </h1>
         <%- _AuthTitle %>
       </div>
-      
+
       <% 
       // handle redirect
       let submit = routes.login;
@@ -21,12 +21,10 @@
 
       <form action="<%= submit %>" method="post" id="login-form" class="flex flex-col gap-3 mt-4 mb-2">
 
-        <%- Input({ name:"email", id:"email", placeholder:tr.email_address, required:true, value:
-            locals.body?.email, icon:"Mail" }) %>
+        <%- Input({ name:"email", id:"email", placeholder:tr.email_address, required:true, autocomplete:"username", value: locals.body?.email, icon:"Mail" }) %>
 
 
-        <%- Input({type:"password", name:"password", id:"password", placeholder:tr.password,
-            required:true, icon:"KeyRound"}) %>
+        <%- Input({type:"password", name:"password", id:"password", placeholder:tr.password, autocomplete:"current-password", required:true, icon:"KeyRound"}) %>
 
         <a href="<%= routes.reset_password %>" class="text-sm text-primary block text-right">
           <%= tr.forgot_password%>
