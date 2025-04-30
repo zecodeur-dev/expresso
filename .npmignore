@@ -1,3 +1,10 @@
-out
-template/node_modules/
-template/.env
+pnpm-lock.yaml
+out/*
+template/seeds/*
+template/generated/*
+template/uploads/*
+
+!template/seeds/.keep
+!template/generated/.keep
+!template/uploads/.keep
+
