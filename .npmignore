@@ -1,5 +1,7 @@
 pnpm-lock.yaml
 out/*
+template/.env
+template/node_modules/*
 template/seeds/*
 template/generated/*
 template/uploads/*

@@ -28,10 +28,11 @@ const apiPaths = [
 
 const namesMap = {
   ".git.template": ".git",
+  ".gitignore.template": ".gitignore",
   ".env.template": ".env",
   "errorHandler.api.js": "errorHandler.js",
   "server.api.js": "server.js",
-  "setup.api.js":"setup.js",
+  "setup.api.js": "setup.js",
   "routes.api.js": "routes.js",
 };
 
