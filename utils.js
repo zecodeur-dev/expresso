@@ -137,7 +137,13 @@ async function createProject(projectName) {
   }
 
   async function copyPath(templateToCopy) {
-    if (!canCopyPath(templateToCopy)) return;
+    if (!canCopyPath(templateToCopy)) {
+      const copyErrorPath = path.join(projectPath, templateToCopy);
+      if (fs.existsSync(copyErrorPath)) {
+        fs.removeSync(copyErrorPath);
+      }
+      return;
+    }
 
     let templateName = templateToCopy;
     templateName = templateName.replaceAll(".api", "");
@@ -146,7 +152,7 @@ async function createProject(projectName) {
     const from = path.join(templatePath, templateToCopy);
     const to = path.join(projectPath, templateName);
 
-    await fs.copy(from,to);
+    await fs.copy(from, to);
     await setVarsInFile(path.join(projectPath, templateName), vars);
   }
   var defaultPort = parseInt(Math.random() * 50000 + 3000);

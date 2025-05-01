@@ -140,6 +140,7 @@ class RoutesService {
   static middleware = (req, res, next) => {
     RoutesService.host = req.protocol + "://" + req.get("host");
     res.locals.routes = {};
+    res.locals.currentPath = req.path;
 
     for (let k of Object.keys(ROUTES)) {
       res.locals.routes[k.toUpperCase()] = ROUTES[k];
