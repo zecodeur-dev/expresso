@@ -7,10 +7,8 @@ const values = require("@views/global");
 const errorHandler = require("@middlewares/errorHandler");
 
 module.exports = function (req, res, next) {
-  
   const originalRender = res.render;
 
-  
   res.render = function (view, options = {}, callback) {
     const blocks = {};
     const originalOptions = {
@@ -40,7 +38,6 @@ module.exports = function (req, res, next) {
 
       let icon = icons[name];
       if (!icon) {
-        
         const iconPath = (n) => path.join("app", "views", "icons", n);
         const existSVG = (n) => fs.existsSync(iconPath(n));
 
@@ -82,6 +79,12 @@ module.exports = function (req, res, next) {
       const componentPath = path.join("app", "views", "components", name);
 
       const content = fs.readFileSync(componentPath, "utf8");
+      if (Array.isArray(data) || typeof data != "object") {
+        data = {
+          args: data,
+        };
+      }
+
 
       while (true) {
         try {
@@ -94,7 +97,7 @@ module.exports = function (req, res, next) {
           if (error.message.includes("is not defined")) {
             const regex = /(\w[\w\s]+) is not defined/;
             const missing = error.message.match(regex)[1];
-            data[missing] = null; 
+            data[missing] = null;
           } else {
             console.log(error.message);
             return `Failed to render component ${name}`;
@@ -116,11 +119,15 @@ module.exports = function (req, res, next) {
       }
     };
 
-    
     const components = getClassesFromTree("app/views/components");
     for (let component of components) {
-      originalOptions[component.class] = (data = {}) =>
-        originalOptions.component(component.name, data);
+      originalOptions[component.class] = (...datas) => {
+        let data = {};
+        if (datas.length === 1) data = datas[0];
+        else if (datas.length > 1) data = datas;
+
+        return originalOptions.component(component.name, data);
+      };
     }
     const blocs = getClassesFromTree("app/views/blocs");
     for (let bloc of blocs) {
@@ -151,8 +158,6 @@ module.exports = function (req, res, next) {
         blocks[name] = content;
         blocks[name + "Class"] = className;
       }
-
-      
 
       if (!blocks.body) {
         blocks.body = renderedView;

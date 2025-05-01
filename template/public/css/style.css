@@ -726,6 +726,27 @@ video {
   width: 100%;
 }
 
+.w-\[380px\] {
+  width: 380px;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
+.\!w-32 {
+  width: 8rem !important;
+}
+
+.min-w-max {
+  min-width: -moz-max-content;
+  min-width: max-content;
+}
+
+.min-w-\[380px\] {
+  min-width: 380px;
+}
+
 .max-w-5xl {
   max-width: 64rem;
 }
@@ -737,6 +758,10 @@ video {
 .max-w-max {
   max-width: -moz-max-content;
   max-width: max-content;
+}
+
+.max-w-\[380px\] {
+  max-width: 380px;
 }
 
 .-translate-x-full {

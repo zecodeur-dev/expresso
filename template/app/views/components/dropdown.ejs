@@ -1,0 +1,19 @@
+ <% 
+ const title = args[0];
+ const config=args[1];
+ const options = config.options;
+ const onchange = config.onchange;
+ %>
+
+ <details class="dropdown" data-onchange="<%= onchange%>">
+   <summary>
+     <%= title %>
+     <%- icons("ChevronDown","dropdown-indicator") %>
+   </summary>
+
+   <ul class="menu dropdown-content">
+     <% options?.forEach(o => { %>
+     <li value="<%= o.value %>" <% if (o.active) { %> class="!text-primary" <% } %>><%= o.title.toUpperCase() %></li>
+     <% }) %>
+   </ul>
+ </details>

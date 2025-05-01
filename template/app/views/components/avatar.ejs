@@ -1,0 +1,7 @@
+<% if (locals.user?.image) { %>
+<img src="<%= locals.user.image %>" alt="" class="rounded-full object-cover aspect-square w-10 bg-secondary <%= args %>">
+<% } else {%>
+<div class="rounded-full object-cover aspect-square w-10 bg-primary text-primary-foreground flex items-center justify-center text-lg uppercase font-bold <%= args %>">
+  <%= locals.user.name[0] %>
+</div>
+<% } %>

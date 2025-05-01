@@ -1,0 +1,10 @@
+<%- Dropdown(
+    lang.toUpperCase(),{
+        onchange:"changeLang",
+        options:langs.map(l=>({
+          title: l.toUpperCase(),
+          value: l,
+          active:l==lang,
+        })),
+      }) 
+%>
