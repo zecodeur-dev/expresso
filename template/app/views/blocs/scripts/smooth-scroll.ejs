@@ -1,0 +1,16 @@
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll("[href^='#']");
+    for (let link of links) {
+      const target = link.getAttribute("href").replace("#", "");
+      if (target.trim() == "") continue;
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        document.getElementById(target).scrollIntoView({
+          behavior: "smooth"
+        });
+        window.location.hash = target;
+      })
+    }
+  })
+</script>

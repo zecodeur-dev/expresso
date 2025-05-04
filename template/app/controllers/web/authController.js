@@ -88,9 +88,7 @@ class AuthController {
 
   static async logout(req, res) {
     try {
-      const expNumber = req.query._exp || 0;
       CookieService.of(req, res).clear(config.authToken);
-      CookieService.of(req, res).set("_exp", expNumber);
       return res.redirect(ROUTES.LOGIN);
     } catch (err) {
       console.log(err);

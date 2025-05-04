@@ -45,7 +45,7 @@ module.exports = {
         "chart-2": "var(--chart-2)",
         "chart-3": "var(--chart-3)",
         "chart-4": "var(--chart-4)",
-        "chart-5": "var(--chart-5)", 
+        "chart-5": "var(--chart-5)",
         sidebar: "var(--sidebar)",
         "sidebar-foreground": "var(--sidebar-foreground)",
         "sidebar-primary": "var(--sidebar-primary)",
@@ -59,14 +59,23 @@ module.exports = {
       borderRadius: {
         DEFAULT: "var(--radius)",
       },
+      borderColor: {
+        DEFAULT: "var(--border)",
+      },
       keyframes: {
         error: {
           "0%": { transform: "scale(0)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
       },
+      blur: {
+        xs: "2px",
+        "4xl": "72px",
+        "5xl": "100px",
+      },
       animation: {
         error: "error 0.2s linear forwards",
+        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       screens: {
         mobile: {

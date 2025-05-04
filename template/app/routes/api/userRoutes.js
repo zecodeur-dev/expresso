@@ -1,7 +1,7 @@
 const express = require("express");
 const userController = require("@controllers/api/userController");
 const accountController = require("@controllers/api/accountController");
-const ROUTES = require("../routes");
+const ROUTES = require("@routes/routes");
 const router = express.Router();
 
 router.get(ROUTES.BASE, userController.getAllUsers);

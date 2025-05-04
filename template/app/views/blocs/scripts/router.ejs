@@ -1,114 +1,136 @@
   <script>
-    const links = [...document.querySelectorAll("[_link]")].map(l => ({
-      url: l.getAttribute("href") || l.getAttribute("_link"),
-      isNav: l.hasAttribute("_nav"),
-      target: document.getElementById(l.getAttribute("_target")),
-      el: l,
-    }));
-    const defaultApp = document.querySelector("[_app]");
+    (function() {
+      const defaultApp = document.querySelector("[_app]");
 
-    const loader = document.querySelector("[_loader]");
-    const loaderOuter = loader?.outerHTML;
-    loader?.remove();
+      const loader = document.querySelector("[_loader]");
+      const loaderOuter = loader?.outerHTML;
+      loader?.remove();
 
-    const error = document.querySelector("[_error]");
-    const errorOuter = error?.outerHTML;
-    error?.remove();
+      const error = document.querySelector("[_error]");
+      const errorOuter = error?.outerHTML;
+      error?.remove();
+
+      let links = [];
 
 
-    function updateActiveNav() {
-      links.forEach(l => {
-        if (!l.isNav) return;
-        if (l.url == window.location.pathname || l.url + "/" == window.location.pathname) {
-          l.el.classList.add("active");
-        } else
-          l.el.classList.remove("active");
-      })
-    }
+      function updateActiveNav() {
+        links.forEach(l => {
+          if (l.url == window.location.pathname || l.url + "/" == window.location.pathname) {
+            if (l.isNav)
+              l.el.classList.add("active");
 
-    async function getContent(l, preventDuplicate = true) {
-      if (preventDuplicate && l.url == window.location.pathname) return;
-      if (!l.target) {
-        if (defaultApp) {
-          l.target = defaultApp;
-        } else {
-          console.error("No target specified for this element", l.el);
-          return;
-        }
+            if (l.navLink) {
+              const navs = links.filter(n => n.url == l.navLink);
+              navs.forEach(n => n.el.classList.add("active"))
+            }
+          } else if (l.isNav)
+            l.el.classList.remove("active");
+
+        })
       }
 
-      history.pushState({}, '', l.url);
-      updateActiveNav();
-
-      if (loaderOuter)
-        l.target.innerHTML = loaderOuter;
-      //   await new Promise((res, rej) => setTimeout(res, 3000))
-
-      fetch(l.url).then(async r => {
-        const parser = new DOMParser();
-
-        if (!r.ok && errorOuter) {
-          const errorParse = parser.parseFromString(errorOuter, "text/html");
-          const code = errorParse.querySelector("[_error_code]");
-          const message = errorParse.querySelector("[_error_message]");
-
-          if (code) code.innerHTML = r.status;
-          if (message) message.innerHTML = r.statusText;
-
-          l.target.innerHTML = errorParse.body.outerHTML;
-          return;
+      async function getContent(l, preventDuplicate = true) {
+        if (!l || !l.url?.trim()) return;
+        if (preventDuplicate && l.url == window.location.pathname) return;
+        if (!l.target) {
+          if (defaultApp) {
+            l.target = defaultApp;
+          } else {
+            console.error("No target specified for this element", l.el);
+            return;
+          }
         }
 
+        history.pushState({}, '', l.url);
+        updateActiveNav();
 
-        document.querySelectorAll("[_dynamic]").forEach(e => e.remove());
+        if (loaderOuter)
+          l.target.innerHTML = loaderOuter;
 
-        const html = await r.text();
-        const doc = parser.parseFromString(html, 'text/html');
+        fetch(l.url).then(async r => {
+          const parser = new DOMParser();
 
-        const outputTarget = l.target == defaultApp ? doc.querySelector("[_app]") : doc.getElementById(l.target.id);
-        const content = outputTarget?.innerHTML;
+          if (!r.ok && errorOuter) {
+            const errorParse = parser.parseFromString(errorOuter, "text/html");
+            const code = errorParse.querySelector("[_error_code]");
+            const message = errorParse.querySelector("[_error_message]");
 
-        if (l.url != window.location.pathname) return;
+            if (code) code.innerHTML = r.status;
+            if (message) message.innerHTML = r.statusText;
 
-        if (content) {
-          const contentParser = parser.parseFromString(content, "text/html");
-
-          const outputScripts = contentParser.querySelectorAll("script");
-          outputScripts.forEach(script => {
-            const newScript = document.createElement('script');
-            if (script.src) {
-              newScript.src = script.src;
-            } else {
-              newScript.textContent = script.textContent;
-            }
-            newScript.setAttribute("_dynamic", true);
-            document.body.appendChild(newScript);
-
-            script.remove();
-          });
-
-          contentParser.querySelectorAll("[_static]").forEach(s => s.remove());
-
-          l.target.innerHTML = contentParser.body.innerHTML;
-        } else {
-          l.target.innerHTML = ""
-        }
+            l.target.innerHTML = errorParse.body.outerHTML;
+            return;
+          }
 
 
-      });
-    }
+          document.querySelectorAll("[_dynamic]").forEach(e => e.remove());
 
-    links.forEach(l => {
-      l.el.addEventListener("click", e => {
-        e.preventDefault();
-        getContent(l);
+          const html = await r.text();
+          const doc = parser.parseFromString(html, 'text/html');
+
+          const outputTarget = l.target == defaultApp ? doc.querySelector("[_app]") : doc.getElementById(l.target.id);
+          const content = outputTarget?.innerHTML;
+
+          if (l.url != window.location.pathname) return;
+
+          if (content) {
+            const contentParser = parser.parseFromString(content, "text/html");
+
+            const outputScripts = contentParser.querySelectorAll("script");
+            outputScripts.forEach(script => {
+              const newScript = document.createElement('script');
+              if (script.src) {
+                newScript.src = script.src;
+              } else {
+                newScript.textContent = script.textContent;
+              }
+              newScript.setAttribute("_dynamic", true);
+              document.body.appendChild(newScript);
+
+              script.remove();
+            });
+
+            contentParser.querySelectorAll("[_static]").forEach(s => s.remove());
+
+            l.target.innerHTML = contentParser.body.innerHTML;
+
+            setListeners();
+          } else {
+            l.target.innerHTML = ""
+          }
+
+
+        });
+      }
+
+      function setListeners() {
+
+        // Clear previous handlers
+        links.forEach(l => l.el.removeEventListener("click", l._handler));
+
+        links = [...document.querySelectorAll("[_link]")].map(l => ({
+          url: l.getAttribute("href") || l.getAttribute("_link"),
+          isNav: l.hasAttribute("_nav"),
+          navLink: l.getAttribute("_navlink"),
+          target: document.getElementById(l.getAttribute("_target")),
+          el: l
+        }));
+
+        links.forEach(l => {
+          l._handler = async (e) => {
+            e.preventDefault();
+            getContent(l);
+          };
+          l.el.addEventListener("click", l._handler)
+        })
+      }
+
+      window.addEventListener("popstate", () => {
+        const link = links.find(l => l.url == window.location.pathname);
+        getContent(link, false)
       })
 
-    })
-    window.addEventListener("popstate", () => {
-      const link = links.find(l => l.url == window.location.pathname)
-      getContent(link, false)
-    })
-
-    updateActiveNav()
+      setListeners();
+      updateActiveNav()
+    })()
   </script>

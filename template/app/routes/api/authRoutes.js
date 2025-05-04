@@ -1,7 +1,7 @@
 const express = require("express");
 const authController = require("@controllers/api/authController");
 const authMiddleware = require("@middlewares/api/authMiddleware");
-const ROUTES = require("../routes");
+const ROUTES = require("@routes/routes");
 
 const router = express.Router();
 

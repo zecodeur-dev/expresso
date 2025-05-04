@@ -23,13 +23,16 @@ class LinkService {
    * @param {number} expireIn.ms - Milliseconds to expire.
    * @param {number} expireIn.d - Days to expire.
    *
-   * @returns {Promise<Object>} - A promise that resolves to the created link.
+   * @returns A promise that resolves to the created link.
    */
   static async create(
     userId,
     type,
     expireIn = { h: 1, s: 0, m: 0, ms: 0, d: 0 }
   ) {
+    /**
+     * @type {import("types").LinkType}
+     */
     var link;
     switch (type) {
       case Links.VERIFICATION:
@@ -56,8 +59,8 @@ class LinkService {
   /**
    * Expires a given link by setting its expiration time to the current time.
    *
-   * @param {Object} link - The link object to expire.
-   * @returns {Promise<Object>} - A promise that resolves to the expired link.
+   * @param {import("types").LinkType} link - The link object to expire.
+   * @returns A promise that resolves to the expired link.
    */
   static async expire(link) {
     link.expireAt = Date.now();
@@ -68,12 +71,13 @@ class LinkService {
   /**
    * Verifies if the link is valid for the specified user and expires it.
    *
-   * @param {Object} link - The link to verify.
+   * @param {import("types").LinkType} link - The link to verify.
    * @param {string} userId - The ID of the user to verify the link for.
-   * @returns {Promise<boolean>} - A promise that resolves to true if the link is valid, false otherwise.
+   * @returns A promise that resolves to true if the link is valid, false otherwise.
    */
   static async verify(link, userId) {
-    if (!link || LinkService.hasExpired(link) || link.userId != userId) return false;
+    if (!link || LinkService.hasExpired(link) || link.userId != userId)
+      return false;
 
     await LinkService.expire(link);
     return true;
@@ -82,7 +86,7 @@ class LinkService {
   /**
    * Checks if the given link has expired.
    *
-   * @param {Object} link - The link to check for expiration.
+   * @param {import("types").LinkType} link - The link to check for expiration.
    * @returns {boolean} - Returns true if the link has expired, false otherwise.
    */
   static hasExpired(link) {

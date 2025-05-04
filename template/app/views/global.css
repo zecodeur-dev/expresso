@@ -7,11 +7,8 @@
   --foreground: #16161d;
 
   --base-100: #f2f2f2;
-  --base-100-content: #16161d;
   --base-200: #ededed;
-  --base-200-content: #16161d;
   --base-300: #dbdbdb;
-  --base-300-content: #16161d;
 
   --card: #ffffff;
   --card-foreground: #16161d;
@@ -83,7 +80,7 @@
   --destructive: #b41e07;
   --destructive-foreground: #6e2924;
 
-  --border: #e7e0ff42;
+  --border: #bdb7d02e;
   --input: var(--border);
 
   --ring: #a282ff;
@@ -142,8 +139,13 @@
 }
 
 @layer utilities {
+  html {
+    scroll-behavior: smooth;
+  }
+  
   * {
     font-family: "Geist";
+    z-index: 1;
   }
 
   body {
@@ -199,7 +201,7 @@
   }
 
   .dropdown-content {
-    @apply  bg-background rounded-md z-10 mt-1 p-2 shadow-sm absolute border dark:border-gray-50/5 
+    @apply bg-background rounded-md z-10 mt-1 p-2 shadow-sm absolute border dark:border-gray-50/5;
   }
 
   .dropdown[open] .dropdown-content {
@@ -210,11 +212,11 @@
   }
 
   .menu li {
-    @apply cursor-pointer block px-4 py-2 text-foreground hover:bg-gray-100 dark:hover:bg-gray-50/5 rounded-md transition-colors duration-200 ;
+    @apply cursor-pointer block px-4 py-2 text-foreground hover:bg-gray-100 dark:hover:bg-gray-50/5 rounded-md transition-colors duration-200;
   }
 
   .dropdown-indicator {
-    display: inline-block; 
+    display: inline-block;
     transition: transform 0.2s;
   }
 

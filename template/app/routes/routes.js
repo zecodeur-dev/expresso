@@ -4,7 +4,6 @@ const ROUTES = {
 
   LOGIN: "/login",
   LOGOUT: "/logout",
-  LOGOUT_EXPIRED: "/logout?_exp=1",
   REGISTER: "/register",
 
   VERIFY_ACCOUNT: "/account-verification",

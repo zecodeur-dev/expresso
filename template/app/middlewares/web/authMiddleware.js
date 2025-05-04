@@ -20,6 +20,7 @@ module.exports = async (req, res, next) => {
     if (!user) throw new Error(code.USER_NOT_FOUND);
     next();
   } catch (err) {
-    return res.redirect(ROUTES.LOGOUT_EXPIRED);
+    CookieService.of(req, res).set("_exp", 1);
+    return res.redirect(ROUTES.LOGOUT);
   }
 };

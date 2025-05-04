@@ -31,13 +31,19 @@ const environment = process.env.NODE_ENV || "development";
 module.exports = {
   dbUri,
   environment,
-  port: process.env.PORT || 3000,
+
+  buildDir: "public",
+  viewsDir: "app/views/pages",
+
+  port: process.env.PORT || 300,
   dbHost: process.env.MONGODB_HOST,
   dbPort: process.env.MONGODB_PORT,
   dbName: process.env.MONGODB_DBNAME || "",
+  setupDb: process.env.SETUP_DB == "true",
+
   cryptoSecret: process.env.CRYPTO_SECRET,
   jwtSecret: process.env.JWT_SECRET,
-  setupDb: process.env.SETUP_DB == "true",
+
   parserLimit: process.env.PARSER_LIMIT || "50mb",
   parserJsonLimit: process.env.PARSER_JSON_LIMIT || "50mb",
   jwtMaxDate: process.env.JWT_MAX_DATE || "30d",

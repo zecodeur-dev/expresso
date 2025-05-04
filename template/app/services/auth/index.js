@@ -29,7 +29,7 @@ class AuthService {
    * @param {object} [options] - Options when getting user.
    * @param {boolean} [options.withStripe=false] - Whether to fetch Stripe subscription details for the user.
    * @param {boolean} [options.fromHeader=false] - Whether to get token from authorization header.
-   * @returns {Promise<object|null>} The authenticated user object, including Stripe data if requested, or `null` if authentication fails.
+   * @returns {Promise<import("types").UserType>|null>>} The authenticated user object, including Stripe data if requested, or `null` if authentication fails.
    */
 
   static async authUser(
