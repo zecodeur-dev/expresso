@@ -4,6 +4,10 @@ const config = require("@/config");
 const AuthService = require("@services/auth");
 const CookieService = require("@services/cookies");
 
+
+/**
+ * @type {import('types').HandlerType}
+*/
 module.exports = async (req, res, next) => {
   try {
     const errors = Errors.from(req, res);

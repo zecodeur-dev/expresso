@@ -6,21 +6,48 @@ const { getClassesFromTree } = require("@utils/index");
 const values = require("@views/global");
 const errorHandler = require("@middlewares/errorHandler");
 
+function normalizeEjsPath(name) {
+  let out = name.replace(path.sep, "").replace("\\", "/");
+  if (!out.endsWith(".ejs")) out += ".ejs";
+  return out;
+}
+
+const cachedContent = {
+  blocs: {},
+  components: {},
+};
+const blocs = getClassesFromTree("app/views/blocs");
+const components = getClassesFromTree("app/views/components");
+
+for (let entry of [...blocs, ...components]) {
+  let key = normalizeEjsPath(entry.name);
+  const isBloc = blocs.includes(entry);
+  const content = fs.readFileSync(path.join(entry.path), "utf8");
+  if (isBloc) cachedContent.blocs[key] = content;
+  else cachedContent.components[key] = content;
+}
+
 module.exports = function (req, res, next) {
   const originalRender = res.render;
 
   res.render = function (view, options = {}, callback) {
     const blocks = {};
+
+    /**
+     * @type {{ string:any }}
+     */
     const originalOptions = {
       title: values.appname,
       head: "",
       bodyClass: "",
-      ...res.locals,
       ...options,
+      ...res.locals,
     };
 
     originalOptions.meta = (name, content) => {
-      return `<meta name="${name}" content="${content}">`;
+      return `<meta name="${name}" ${
+        content ? 'content="' + content + '"' : ""
+      }>`;
     };
 
     originalOptions.css = (...files) => {
@@ -74,64 +101,70 @@ module.exports = function (req, res, next) {
     };
 
     originalOptions.component = function (name, data = {}) {
-      if (!name.endsWith(".ejs")) name += ".ejs";
+      name = normalizeEjsPath(name);
+      const content = cachedContent.components[name];
+      if (!content) return `Component not found: ${name}`;
 
-      const componentPath = path.join("app", "views", "components", name);
-
-      const content = fs.readFileSync(componentPath, "utf8");
       if (Array.isArray(data) || typeof data != "object") {
         data = {
           args: data,
         };
       }
-
-
-      while (true) {
-        try {
-          const render = ejs.render(content, {
-            ...originalOptions,
-            ...data,
-          });
-          return render;
-        } catch (error) {
-          if (error.message.includes("is not defined")) {
-            const regex = /(\w[\w\s]+) is not defined/;
-            const missing = error.message.match(regex)[1];
-            data[missing] = null;
-          } else {
-            console.log(error.message);
-            return `Failed to render component ${name}`;
+      try {
+        const rendered = ejs.render(content, {
+          ...originalOptions,
+          ...data,
+        });
+        return rendered;
+      } catch (error) {
+        if (error.message.includes("is not defined")) {
+          const regex = /(\w[\w\d_]*) is not defined/;
+          const match = error.message.match(regex);
+          if (match) {
+            const missing = match[1];
+            originalOptions[missing] = null;
+            return originalOptions.component(name, data);
           }
         }
+        console.log(error.message);
+        return `Failed to render component ${name}`;
       }
     };
 
     originalOptions.bloc = function (name) {
-      if (!name.endsWith(".ejs")) name += ".ejs";
+      name = normalizeEjsPath(name);
+      const content = cachedContent.blocs[name];
+      if (!content) return `Bloc not found: ${name}`;
 
-      const componentPath = path.join("app", "views", "blocs", name);
       try {
-        const content = fs.readFileSync(componentPath, "utf8");
-        return ejs.render(content, originalOptions);
+        const rendered = ejs.render(content, originalOptions);
+        return rendered;
       } catch (error) {
-        console.log(error);
-        return `Failed to render bloc '${name}'`;
+        if (error.message.includes("is not defined")) {
+          const regex = /(\w[\w\d_]*) is not defined/;
+          const match = error.message.match(regex);
+          if (match) {
+            const missing = match[1];
+            originalOptions[missing] = null;
+            return originalOptions.bloc(name);
+          }
+        }
+        console.log(error.message);
+        return `Failed to render bloc ${name}`;
       }
     };
 
-    const components = getClassesFromTree("app/views/components");
     for (let component of components) {
       originalOptions[component.class] = (...datas) => {
         let data = {};
         if (datas.length === 1) data = datas[0];
         else if (datas.length > 1) data = datas;
-
         return originalOptions.component(component.name, data);
       };
     }
-    const blocs = getClassesFromTree("app/views/blocs");
+
     for (let bloc of blocs) {
-      originalOptions[`_${bloc.class}`] = originalOptions.bloc(bloc.name);
+      originalOptions[`_${bloc.class}`] = () => originalOptions.bloc(bloc.name);
     }
 
     originalRender.call(this, view, originalOptions, (err, renderedView) => {
@@ -169,6 +202,7 @@ module.exports = function (req, res, next) {
       if (blocks.layout) delete blocks.layout;
 
       const layoutPath = `app/views/layouts/${layout}`;
+
       fs.readFile(path.resolve(layoutPath), "utf8", (err, layoutTemplate) => {
         if (err) return callback ? callback(err) : next(err);
 
@@ -179,7 +213,6 @@ module.exports = function (req, res, next) {
           };
 
           const finalHtml = ejs.render(layoutTemplate, layoutOptions);
-
           if (callback) {
             callback(null, finalHtml);
           } else {

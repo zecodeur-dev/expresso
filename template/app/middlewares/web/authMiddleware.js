@@ -6,6 +6,10 @@ const Errors = require("../../../config/errors");
 const CookieService = require("@services/cookies");
 const config = require("@/config");
 
+
+/**
+ * @type {import('types').HandlerType}
+*/
 module.exports = async (req, res, next) => {
   const { code } = Errors.from(req, res);
   const token = CookieService.of(req, res).get(config.authToken);

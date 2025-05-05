@@ -8,7 +8,7 @@
         <h1 class="text-3xl font-black text-foreground">
           <%= tr.login_t?.toUpperCase() %>
         </h1>
-        <%- _AuthTitle %>
+        <%- _AuthTitle() %>
       </div>
 
       <% 
@@ -42,7 +42,7 @@
       </span>
 
       <%- bloc("error-message")%>
-      <!-- or <%- _ErrorMessage %>  -->
+      <!-- or <%- _ErrorMessage() %>  -->
 
     </div>
   </div>

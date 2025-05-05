@@ -9,7 +9,7 @@
         <h1 class="text-3xl font-black text-foreground">
           <%= tr.register_t?.toUpperCase() %>
         </h1>
-        <%- _AuthTitle %>
+        <%- _AuthTitle() %>
 
       </div>
 
@@ -47,7 +47,7 @@
         </a>
       </span>
 
-      <%- _ErrorMessage %>
+      <%- _ErrorMessage() %>
 
     </div>
   </div>

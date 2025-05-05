@@ -124,7 +124,7 @@
   /* 2 */
   border-style: solid;
   /* 2 */
-  border-color: #e5e7eb;
+  border-color: var(--border);
   /* 2 */
 }
 
@@ -588,6 +588,10 @@ video {
   }
 }
 
+.fixed {
+  position: fixed;
+}
+
 .absolute {
   position: absolute;
 }
@@ -632,12 +636,20 @@ video {
   right: 1.5rem;
 }
 
+.top-0 {
+  top: 0px;
+}
+
 .top-1\/2 {
   top: 50%;
 }
 
 .top-3 {
   top: 0.75rem;
+}
+
+.-z-10 {
+  z-index: -10;
 }
 
 .z-0 {
@@ -1231,9 +1243,12 @@ video {
   transition-duration: 200ms;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 * {
   font-family: "Geist";
-  z-index: 1;
 }
 
 body {
@@ -1459,11 +1474,8 @@ summary::-webkit-details-marker {
   --background: #ffffff;
   --foreground: #16161d;
   --base-100: #f2f2f2;
-  --base-100-content: #16161d;
   --base-200: #ededed;
-  --base-200-content: #16161d;
   --base-300: #dbdbdb;
-  --base-300-content: #16161d;
   --card: #ffffff;
   --card-foreground: #16161d;
   --popover: #ededed;
@@ -1524,7 +1536,7 @@ summary::-webkit-details-marker {
   --card: #1a2026;
   --destructive: #b41e07;
   --destructive-foreground: #6e2924;
-  --border: #e7e0ff42;
+  --border: #bdb7d02e;
   --input: var(--border);
   --ring: #a282ff;
   --info: #729af1;

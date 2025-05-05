@@ -3,6 +3,7 @@ const Errors = require("../../config/errors");
 exports.e500 = (err, req, res, next) => {
   const errors = Errors.from(req, res);
   const status = err.status || 500;
+  console.error(err);
   errors.json({
     ...errors.code.SERVER_ERROR,
     code: status,

@@ -5,6 +5,7 @@ const config = require("@/config");
 exports.e500 = (err, req, res, next) => {
   const error = Errors.from(req, res);
   const status = err.status || 500;
+  console.error(err);
   res.status(err.status || 500).render("error", {
     title: status,
     devMode: config.isDev,

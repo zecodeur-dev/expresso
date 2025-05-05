@@ -3,6 +3,10 @@ const jwt = require("jsonwebtoken");
 const CookieService = require("@services/cookies");
 const config = require("@/config");
 
+
+/**
+ * @type {import('types').HandlerType}
+*/
 module.exports = (req, res, next) => {
   const token = CookieService.of(req, res).get(config.authToken);
   if (!token) {
