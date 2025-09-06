@@ -1,30 +1,19 @@
 const config = require("@/config");
-const CookieService = require("../cookies");
+const CookieService = require("../cookies/cookies.service");
 const translations = require("./translations");
+
+const trValues = {};
+Object.values(translations).forEach((o) => {
+  Object.entries(o).forEach(([k, v]) => {
+    const defaultV = translations[config.appLang][k];
+    trValues[k] = defaultV ?? v;
+  });
+});
 
 /**
  * Service for managing language settings, translations, and locale variables in the application.
  */
 class LangService {
-  /**
-   * Default application language.
-   * @type {string}
-   * @private
-   */
-  static #lang = config.appLang;
-
-  /**
-   * Sets the application language.
-   * @param {string} [str= LangService.#lang] - The language to set.
-   */
-  static setLang = (str = LangService.#lang) => (LangService.#lang = str);
-
-  /**
-   * Gets the current application language.
-   * @returns {string} The current language.
-   */
-  static getLang = () => LangService.#lang;
-
   /**
    * Replaces translation variables in the response locals.
    *  LangService method loops through all the keys in the translations and replaces variables
@@ -59,11 +48,11 @@ class LangService {
      * @param {function} next - The next middleware function.
      */
     return function (req, res, next) {
-      res.locals.tr = {};
+      res.locals.tr = { ...trValues };
 
       let lang = req.query.lang;
       if (!translations[lang]) lang = CookieService.of(req, res).get("lang");
-      if (!translations[lang]) lang = LangService.getLang();
+      if (!translations[lang]) lang = config.appLang;
 
       const translation = translations[lang];
       if (!translation) return next();
@@ -72,8 +61,9 @@ class LangService {
       req.lang = lang;
       res.locals.lang = lang;
       res.locals.langs = Object.keys(translations);
+
       for (let key of Object.keys(translation)) {
-        const tr = translations[lang][key];
+        const tr = translation[key];
         res.locals.tr[key] = tr;
         if (!caseSensitive) {
           res.locals.tr[key.toUpperCase()] = tr;

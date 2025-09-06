@@ -5,19 +5,19 @@ const {
 } = require("@models/linkModel");
 const User = require("@models/userModel");
 const ROUTES = require("@routes/routes");
-const AuthService = require("@services/auth");
-const LangService = require("@services/lang");
-const LinkService = require("@services/link");
-const UserService = require("@services/user");
+const AuthService = require("@/app/services/auth/auth.service");
+const LangService = require("@/app/services/lang/lang.service");
+const LinkService = require("@/app/services/link/link.service");
+const UserService = require("@/app/services/user/user.service");
 
 class AccountController {
   static async sendVerificationMail(req, res) {
     try {
-      const user = await AuthService.authUser(req);
+      const user = req.user;
       if (user.accountVerified) {
         return res.redirect(ROUTES.BASE);
       }
-      const email_sent = await UserService.of(user).sendVerificationEmail();
+      const email_sent = (await UserService.of(user).sendVerificationEmail()).sent;
 
       LangService.setVars(res, { email: `<b>${user.email}</b>` });
       return res.render("accountValidation", {
@@ -34,7 +34,7 @@ class AccountController {
 
   static async verifyAccount(req, res) {
     try {
-      const user = await AuthService.authUser(req);
+      const user = req.user;
       const link = await VerificationLink.findOne({ path: req.params.id });
 
       if (await LinkService.verify(link, user.id)) {
@@ -74,7 +74,7 @@ class AccountController {
           email_sent: false,
         });
       }
-      const email_sent = await UserService.of(user).sendPasswordResetEmail();
+      const email_sent = (await UserService.of(user).sendPasswordResetEmail()).sent;
 
       return res.render("passwordReset", {
         message: email_sent

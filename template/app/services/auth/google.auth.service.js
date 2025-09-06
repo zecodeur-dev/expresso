@@ -1,6 +1,6 @@
 const config  = require("@/config");
 const Errors = require("../../../config/errors");
-const RoutesService = require("../routes");
+const RoutesService = require("../routes/routes.service");
 const jwt = require("jsonwebtoken");
 const express = require("express");
 const ROUTES = require("@routes/routes");

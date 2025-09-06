@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const homeController = require("@controllers/web/homeController");
+const homeController = require("@/app/controllers/web/home.controller");
 const ROUTES = require("@routes/routes");
-const webAuthMiddleware = require("@middlewares/web/authMiddleware");
-const authController = require("@controllers/web/authController");
+const webAuthMiddleware = require("@/app/middlewares/web/auth.middleware");
+const authController = require("@/app/controllers/web/auth.controller");
 const preventLogin = require("@middlewares/web/preventLogin");
-const UploadService = require("@services/upload");
-const accountMiddleware = require("@middlewares/web/accountMiddleware");
-const accountController = require("@controllers/web/accountController");
+const UploadService = require("@/app/services/upload/upload.service");
+const accountMiddleware = require("@/app/middlewares/web/account.middleware");
+const accountController = require("@/app/controllers/web/account.controller");
 
 router.get(
   ROUTES.BASE,

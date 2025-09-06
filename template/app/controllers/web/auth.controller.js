@@ -1,12 +1,12 @@
 const User = require("@models/userModel");
 const ROUTES = require("@routes/routes");
 const { e500, e400 } = require("@middlewares/errorHandler");
-const CookieService = require("@services/cookies");
-const AuthService = require("@services/auth");
+const CookieService = require("@/app/services/cookies/cookies.service");
+const AuthService = require("@/app/services/auth/auth.service");
 const config = require("@/config");
 const Errors = require("../../../config/errors");
-const MailService = require("@services/mail");
-const UploadService = require("@services/upload");
+const MailService = require("@/app/services/mail/mail.service");
+const UploadService = require("@/app/services/upload/upload.service");
 
 class AuthController {
   static async login(req, res) {

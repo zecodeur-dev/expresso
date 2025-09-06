@@ -9,11 +9,12 @@
 
       const action = currentTarget?.dataset.action;
       if (currentTarget && action && typeof window[action] === "function") {
-        let args = currentTarget.dataset.actionArgs;
-        if (args) {
-          try {
-            args = JSON.parse(args)
-          } catch (_) {}
+        const argsRegex = /\baction([A-Z][a-zA-Z_]*)\b/;
+        const actionsArgs = Object.keys(currentTarget.dataset).filter(k => k.match(argsRegex)).map(k => k.match(argsRegex)[1]);
+
+        const args = {};
+        for (let a of actionsArgs) {
+          args[a.toLocaleLowerCase()] = currentTarget.dataset[`action${a}`]
         }
         window[action](args);
       }
@@ -21,10 +22,9 @@
 
     document.querySelectorAll(".dropdown-content").forEach(dc => dc.addEventListener("click", e => {
       let target = e.target;
-      
+
       if (!target.getAttribute("value"))
         target = target.closest("[value]");
-
 
       const dropdown = target?.closest(".dropdown");
       if (!dropdown) return;
@@ -42,4 +42,19 @@
       onChange(value);
 
     }))
+
+    const tabs = document.querySelectorAll(".tab-header > *");
+    const contents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach((t) => {
+          t.classList.remove("active");
+        });
+        tab.classList.add("active");
+
+        contents.forEach((c) => c.classList.remove("active"));
+        document.getElementById(tab.dataset.tab).classList.add("active");
+      });
+    });
   </script>

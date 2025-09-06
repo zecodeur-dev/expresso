@@ -4,9 +4,9 @@ const {
   PasswordResetLink,
 } = require("@models/linkModel");
 const ROUTES = require("@routes/routes");
-const LinkService = require("../link");
-const MailService = require("../mail");
-const RoutesService = require("../routes");
+const LinkService = require("../link/link.service");
+const MailService = require("../mail/mail.service");
+const RoutesService = require("../routes/routes.service");
 
 /**
  * Service to manage user's account (verify, send likns, etc..)
@@ -42,9 +42,7 @@ class UserService {
    * This method generates a verification link for the user and sends a template-based email with the link.
    *
    * @param {boolean} [useApiUrl=false] If true, the link sent will include /api/users/ referred to the email verification route
-   *
-   * @returns {Promise<boolean>} - Returns `true` if the email was sent successfully, `false` otherwise.
-   */
+    */
   async sendVerificationEmail(useApiUrl = false) {
     const userId = this.user.id;
 
@@ -77,7 +75,6 @@ class UserService {
    *
    * @param {boolean} [useApiUrl=false] If true, the link sent will include /api/users/ referred to the password reset route
    *
-   * @returns {Promise<boolean>} - Returns `true` if the email was sent successfully, `false` otherwise.
    */
   async sendPasswordResetEmail(useApiUrl = false) {
     const userId = this.user.id;

@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const config = require("@/config");
 const User = require("@models/userModel");
-const CookieService = require("../cookies");
-const PaymentService = require("../payment");
-
+const CookieService = require("../cookies/cookies.service");
+const PaymentService = require("../payment/payment.service");
+const { encrypt } = require("../crypto/crypto.service");
 /**
  * Service for handling authentication and user-related operations.
  * Includes functionality for generating tokens, authenticating users,
@@ -29,7 +29,8 @@ class AuthService {
    * @param {object} [options] - Options when getting user.
    * @param {boolean} [options.withStripe=false] - Whether to fetch Stripe subscription details for the user.
    * @param {boolean} [options.fromHeader=false] - Whether to get token from authorization header.
-   * @returns {Promise<import("types").UserType>|null>>} The authenticated user object, including Stripe data if requested, or `null` if authentication fails.
+   *
+   * @returns {Promise<InstanceType<typeof User>|null>} The authenticated user object, including Stripe data if requested, or `null` if authentication fails.
    */
 
   static async authUser(
@@ -49,8 +50,7 @@ class AuthService {
     try {
       const decoded = jwt.verify(token, config.jwtSecret);
       req.headers.authorization = token;
-      req.user = decoded;
-      const user = await User.findById(req.user.userId);
+      const user = await User.findById(decoded.userId);
       if (!user) return null;
 
       if (!options.withStripe) return user;

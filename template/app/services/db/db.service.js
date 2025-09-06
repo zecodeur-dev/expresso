@@ -20,13 +20,13 @@ class DBService {
 
     if (showConnectionState) {
       mongoose.connection.on("connected", () => {
-        console.log("Connected to MongoDB");
+        console.log(`Connected to db '${mongoose.connection.db.databaseName}'`);
       });
     }
 
     try {
       if (showConnectionState)
-        console.log(`Connecting to MongoDB (${config.dbUri})`);
+        console.log(`Connecting to Mongo (${config.dbUri})`);
       await mongoose.connect(config.dbUri, {});
     } catch (err) {
       console.error("Error connecting to MongoDB: ", err.message);

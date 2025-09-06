@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const DateService = require("@services/date");
+const DateService = require("@/app/services/date/date.service");
 
 const linkSchema = new mongoose.Schema(
   {

@@ -1,5 +1,5 @@
-const CookieService = require("@services/cookies");
-const LangService = require("@services/lang");
+const CookieService = require("@/app/services/cookies/cookies.service");
+const LangService = require("@/app/services/lang/lang.service");
 
 class Errors {
   constructor(req, res) {

@@ -21,11 +21,17 @@ class CryptoService {
   static decrypt(encryptedText) {
     CryptoService.checkScretKey();
     if (!encryptedText) return;
-    const bytes = CryptoJS.AES.decrypt(encryptedText, CryptoService.secretKey);
-    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-    return decrypted;
+    try {
+      const bytes = CryptoJS.AES.decrypt(
+        encryptedText,
+        CryptoService.secretKey
+      );
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      return decrypted;
+    } catch (error) {
+      return;
+    }
   }
 }
 
 module.exports = CryptoService;
-  

@@ -1,32 +1,34 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
+const env = process.env;
+
 var dbUri;
-if (process.env.MONGODB_URI) {
-  if (process.env.MONGODB_URI.endsWith("/"))
-    process.env.MONGODB_URI = process.env.MONGODB_URI.slice(0, -1);
+if (env.MONGODB_URI) {
+  if (env.MONGODB_URI.endsWith("/"))
+    env.MONGODB_URI = env.MONGODB_URI.slice(0, -1);
   let params;
-  if (process.env.MONGODB_URI.includes("?")) {
-    params = process.env.MONGODB_URI.split("?")[1];
-    process.env.MONGODB_URI = process.env.MONGODB_URI.split("?")[0];
+  if (env.MONGODB_URI.includes("?")) {
+    params = env.MONGODB_URI.split("?")[1];
+    env.MONGODB_URI = env.MONGODB_URI.split("?")[0];
   }
 
-  dbUri = `${process.env.MONGODB_URI}/${process.env.MONGODB_DBNAME}${
+  dbUri = `${env.MONGODB_URI}/${env.MONGODB_DBNAME}${
     params ? "?" + params : ""
   }`;
 } else {
-  dbUri = `${process.env.MONGODB_HOST || "127.0.0.1"}:${
-    process.env.MONGODB_PORT || 27017
-  }/${process.env.MONGODB_DBNAME}`;
+  dbUri = `${env.MONGODB_HOST || "127.0.0.1"}:${
+    env.MONGODB_PORT || 27017
+  }/${env.MONGODB_DBNAME}`;
 
-  if (process.env.MONGODB_USER && process.env.SETUP_DB == "true") {
-    if (!process.env.MONGODB_PASSWORD)
+  if (env.MONGODB_USER && env.SETUP_DB == "true") {
+    if (!env.MONGODB_PASSWORD)
       console.log("WARNING: Login DB without password.");
-    dbUri = `${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${dbUri}`;
+    dbUri = `${env.MONGODB_USER}:${env.MONGODB_PASSWORD}@${dbUri}`;
   }
   dbUri = `mongodb://${dbUri}`;
 }
-const environment = process.env.NODE_ENV || "development";
+const environment = env.NODE_ENV || "development";
 
 module.exports = {
   dbUri,
@@ -35,36 +37,36 @@ module.exports = {
   buildDir: "public",
   viewsDir: "app/views/pages",
 
-  port: process.env.PORT || 300,
-  dbHost: process.env.MONGODB_HOST,
-  dbPort: process.env.MONGODB_PORT,
-  dbName: process.env.MONGODB_DBNAME || "",
-  setupDb: process.env.SETUP_DB == "true",
+  port: env.PORT || 300,
+  dbHost: env.MONGODB_HOST,
+  dbPort: env.MONGODB_PORT,
+  dbName: env.MONGODB_DBNAME || "",
+  setupDb: env.SETUP_DB == "true",
 
-  cryptoSecret: process.env.CRYPTO_SECRET,
-  jwtSecret: process.env.JWT_SECRET,
+  cryptoSecret: env.CRYPTO_SECRET,
+  jwtSecret: env.JWT_SECRET,
 
-  parserLimit: process.env.PARSER_LIMIT || "50mb",
-  parserJsonLimit: process.env.PARSER_JSON_LIMIT || "50mb",
-  jwtMaxDate: process.env.JWT_MAX_DATE || "30d",
-  cookieMaxDate: process.env.COOKIE_MAX_DATE || "1y",
+  parserLimit: env.PARSER_LIMIT || "50mb",
+  parserJsonLimit: env.PARSER_JSON_LIMIT || "50mb",
+  jwtMaxDate: env.JWT_MAX_DATE || "30d",
+  cookieMaxDate: env.COOKIE_MAX_DATE || "1y",
 
-  authToken: process.env.AUTH_TOKEN || "_tk",
-  googleAuthClientId: process.env.GOOGLE_AUTH_CLIENT_ID,
-  googleAuthClientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
+  authToken: env.AUTH_TOKEN || "_tk",
+  googleAuthClientId: env.GOOGLE_AUTH_CLIENT_ID,
+  googleAuthClientSecret: env.GOOGLE_AUTH_CLIENT_SECRET,
 
-  appId: process.env.APP_ID || "",
-  appLang: process.env.APP_LANG || "en",
+  appId: env.APP_ID || "",
+  appLang: env.APP_LANG || "en",
 
-  stripePublishableKey: process.env.STRIPE_PK,
-  stripeSecretKey: process.env.STRIPE_SK,
+  stripePublishableKey: env.STRIPE_PK,
+  stripeSecretKey: env.STRIPE_SK,
 
-  mailerHost: process.env.MAILER_HOST || "smtp.gmail.com",
-  mailerPort: process.env.MAILER_PORT || 465,
-  mailerUser: process.env.MAILER_USER,
-  mailerPwd: process.env.MAILER_PWD,
-  mailerAppName: process.env.MAILER_APPNAME,
-  mailerReceivers: (process.env.MAILER_RECEIVERS ?? "").split(","),
+  mailerHost: env.MAILER_HOST || "smtp.gmail.com",
+  mailerPort: env.MAILER_PORT || 465,
+  mailerUser: env.MAILER_USER,
+  mailerPwd: env.MAILER_PWD,
+  mailerAppName: env.MAILER_APPNAME,
+  mailerReceivers: (env.MAILER_RECEIVERS ?? "").split(","),
 
   isDev: ["dev", "development", "develop", "test"].includes(environment),
   isProd: ["prod", "production", "release", "released"].includes(environment),

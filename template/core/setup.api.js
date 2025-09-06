@@ -9,12 +9,13 @@ const baseMiddlewares = [
   bodyParser.json({ limit: config.parserJsonLimit }),
   bodyParser.urlencoded({ extended: true, limit: config.parserLimit }),
 
-  require("@services/routes").middleware,
-  require("@services/lang").middleware(false),
-  require("@services/upload").router,
+  require("@/app/services/routes/routes.service").middleware,
+  require("@/app/services/lang.service").middleware(false),
+  require("@/app/services/upload/upload.service").router,
 ];
 
 function setup(app) {
+  app.enable('trust proxy');
   for (let middleware of baseMiddlewares) app.use(middleware);
 }
 

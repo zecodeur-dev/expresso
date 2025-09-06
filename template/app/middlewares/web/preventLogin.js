@@ -1,6 +1,6 @@
 const ROUTES = require("@routes/routes");
 const jwt = require("jsonwebtoken");
-const CookieService = require("@services/cookies");
+const CookieService = require("@/app/services/cookies/cookies.service");
 const config = require("@/config");
 
 

@@ -1,3 +1,5 @@
-  <a href="/logout" class="<%= global("class").btn.outline %> font-bold flex gap-1 items-center justify-center absolute right-6 bottom-6">
-   <span class="hidden lg:inline"> <%= tr.logout?.toUpperCase() %></span> <%- icons("LogOut") %>
-  </a>
+  <form action="/logout" method="get" class="flex justify-center items-center">
+    <button class="<%= global("class").btn.outline %> font-bold flex gap-1 items-center justify-center">
+      <span class="hidden lg:inline"> <%= tr.logout?.toUpperCase() %></span> <%- icons("LogOut") %>
+    </button>
+  </form>

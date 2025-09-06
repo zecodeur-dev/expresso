@@ -5,6 +5,7 @@ const icons = require("lucide-static");
 const { getClassesFromTree } = require("@utils/index");
 const values = require("@views/global");
 const errorHandler = require("@middlewares/errorHandler");
+const { isDev } = require("@/config");
 
 function normalizeEjsPath(name) {
   let out = name.replace(path.sep, "").replace("\\", "/");
@@ -15,20 +16,40 @@ function normalizeEjsPath(name) {
 const cachedContent = {
   blocs: {},
   components: {},
+  isCached: false,
 };
-const blocs = getClassesFromTree("app/views/blocs");
-const components = getClassesFromTree("app/views/components");
 
-for (let entry of [...blocs, ...components]) {
-  let key = normalizeEjsPath(entry.name);
-  const isBloc = blocs.includes(entry);
-  const content = fs.readFileSync(path.join(entry.path), "utf8");
-  if (isBloc) cachedContent.blocs[key] = content;
-  else cachedContent.components[key] = content;
+/**
+ * @type {getClassesFromTree}
+ */
+var blocs;
+
+/**
+ * @type {getClassesFromTree}
+ */
+var components;
+
+function refreshCache() {
+  if (cachedContent.isCached) return; // don't refresh if cached
+
+  blocs = getClassesFromTree("app/views/blocs");
+  components = getClassesFromTree("app/views/components");
+
+  for (let entry of [...blocs, ...components]) {
+    let key = normalizeEjsPath(entry.name);
+    const isBloc = blocs.includes(entry);
+    const content = fs.readFileSync(path.join(entry.path), "utf8");
+    if (isBloc) cachedContent.blocs[key] = content;
+    else cachedContent.components[key] = content;
+  }
+
+  if (!isDev) cachedContent.isCached = true; // cache in prod
 }
 
 module.exports = function (req, res, next) {
   const originalRender = res.render;
+
+  refreshCache();
 
   res.render = function (view, options = {}, callback) {
     const blocks = {};
@@ -42,12 +63,6 @@ module.exports = function (req, res, next) {
       bodyClass: "",
       ...options,
       ...res.locals,
-    };
-
-    originalOptions.meta = (name, content) => {
-      return `<meta name="${name}" ${
-        content ? 'content="' + content + '"' : ""
-      }>`;
     };
 
     originalOptions.css = (...files) => {
@@ -79,7 +94,7 @@ module.exports = function (req, res, next) {
 
         icon = icon.replace(
           `class="`,
-          `class="${globalValues.class.icon} ${className} `
+          `class="${values.class.icon} ${className} `
         );
       }
 
@@ -99,6 +114,7 @@ module.exports = function (req, res, next) {
 
       globalValues[name] = content;
     };
+    originalOptions.C = globalValues;
 
     originalOptions.component = function (name, data = {}) {
       name = normalizeEjsPath(name);
@@ -170,14 +186,17 @@ module.exports = function (req, res, next) {
     originalRender.call(this, view, originalOptions, (err, renderedView) => {
       if (err) {
         req.error = err;
+        const isNotFound = err.view && !err.view.path;
         return callback
           ? callback(err)
+          : isNotFound
+          ? errorHandler.e404(req, res, next)
           : errorHandler.e500(err, req, res, next);
       }
 
       const blockRegex = /<(\w+)( class=["'][^"']+["'])?>([\s\S]*?)<\/\1>/g;
       let match;
-
+      const bodyScripts = [];
       while ((match = blockRegex.exec(renderedView)) !== null) {
         const name = match[1];
         let className = match[2];
@@ -188,15 +207,27 @@ module.exports = function (req, res, next) {
             .replaceAll("class=", "")
             .trim();
         const content = match[3];
-        blocks[name] = content;
-        blocks[name + "Class"] = className;
+        if (name == "script") {
+          bodyScripts.push(content);
+        } else {
+          blocks[name] = content;
+          blocks[name + "Class"] = className;
+        }
       }
 
       if (!blocks.body) {
-        blocks.body = renderedView;
+        blocks.body = renderedView.replace(
+          /<script\b[^>]*>([\s\S]*?)<\/script>/g,
+          ""
+        );
       }
 
-      let layout = originalOptions.layout ?? blocks.layout ?? "default";
+      for (let script of bodyScripts) {
+        blocks.body += `<script>${script}</script>`;
+      }
+
+      let layout = originalOptions.layout ?? blocks.layout;
+      if (!layout) layout = "default";
       if (!layout.endsWith(".ejs")) layout += ".ejs";
 
       if (blocks.layout) delete blocks.layout;

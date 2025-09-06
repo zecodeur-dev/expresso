@@ -6,7 +6,7 @@ const global = {
       "w-full text-foreground rounded-md border border-input bg-background py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus:ring-gray-400",
     btn: {
       default:
-        "group flex gap-2 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none px-4 py-2 transition duration-200 h-8",
+        "group flex gap-2 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none px-4 py-2 transition duration-200 h-8 cursor-pointer",
 
       get primary() {
         return `${this.default} bg-primary text-primary-foreground hover:bg-primary/90`;

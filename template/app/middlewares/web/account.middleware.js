@@ -1,20 +1,20 @@
 const Errors = require("../../../config/errors");
 const ROUTES = require("@routes/routes");
 const config = require("@/config");
-const AuthService = require("@services/auth");
-const CookieService = require("@services/cookies");
-
+const AuthService = require("@/app/services/auth/auth.service");
+const CookieService = require("@/app/services/cookies/cookies.service");
 
 /**
  * @type {import('types').HandlerType}
-*/
+ */
 module.exports = async (req, res, next) => {
   try {
     const errors = Errors.from(req, res);
 
-    const user = await AuthService.authUser(req);
+    const user = req.user;
     if (!user) {
-      return res.redirect(ROUTES.LOGOUT_EXPIRED);
+       CookieService.of(req, res).set("_exp", 1);
+       return res.redirect(ROUTES.LOGOUT);
     }
     if (user.accountVerified != true) {
       return res.redirect(ROUTES.VERIFY_ACCOUNT);

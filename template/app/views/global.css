@@ -27,7 +27,7 @@
   --border: #adadc85b;
   --input: var(--border);
   --destructive: #b41e07;
-  --destructive-foreground: #000000;
+  --destructive-foreground: #ffffff;
 
   --ring: var(--primary);
 
@@ -77,8 +77,9 @@
   --muted: #141423;
   --muted-foreground: #f8f7ffd4;
   --card: #1a2026;
+  --card-foreground: #ffffff;
   --destructive: #b41e07;
-  --destructive-foreground: #6e2924;
+  --destructive-foreground: #ffffff;
 
   --border: #bdb7d02e;
   --input: var(--border);
@@ -139,12 +140,10 @@
 }
 
 @layer utilities {
+  *,
   html {
-    scroll-behavior: smooth;
-  }
-  
-  * {
     font-family: "Geist";
+    scroll-behavior: smooth !important;
   }
 
   body {
@@ -183,7 +182,7 @@
   }
 
   button {
-    @apply inline-flex items-center justify-center rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none px-4 py-2 transition duration-200 bg-foreground text-background h-8;
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none px-4 py-2 transition duration-200 bg-foreground text-background h-8 cursor-pointer;
   }
 
   .bg-active.active {
@@ -229,5 +228,27 @@
   }
   summary::-webkit-details-marker {
     display: none;
+  }
+
+
+
+  .tab > .tab-header {
+    @apply flex gap-2 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-950 p-1;
+  }
+
+  .tab > .tab-header > * {
+    @apply flex-1 bg-transparent text-muted-foreground px-3 py-2;
+  }
+
+  .tab > .tab-header > .active {
+    @apply bg-background text-foreground;
+  }
+
+  .tab > .tab-content {
+    @apply hidden;
+  }
+
+  .tab > .tab-content.active {
+    @apply block;
   }
 }

@@ -13,13 +13,15 @@
    }
 
    function updateTheme() {
-     for (let t of themes) document.body.classList.remove(t);
+     for (let t of themes) document.documentElement.classList.remove(t);
      const theme = getTheme();
-     document.body.classList.add(theme);
+     document.documentElement.classList.add(theme);
      document.cookie = `theme=${theme};path=/;max-age=${60*60*24*365 }`;
    }
 
-   function changeTheme(theme) {
+   function changeTheme({
+     theme
+   }) {
      if (theme) {
        if (!themes.includes(theme)) theme = "system";
      } else {

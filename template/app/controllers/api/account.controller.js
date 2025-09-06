@@ -6,8 +6,8 @@ const {
 const User = require("@models/userModel");
 const Link = require("@models/linkModel");
 const ROUTES = require("@routes/routes");
-const LinkService = require("@services/link");
-const UserService = require("@services/user");
+const LinkService = require("@/app/services/link/link.service");
+const UserService = require("@/app/services/user/user.service");
 
 /**
  *
@@ -46,7 +46,7 @@ class ApiAccountController {
         return errors.json(errors.code.USER_NOT_UPDATED);
       }
 
-      const email_sent = await UserService.of(user).sendVerificationEmail(true);
+      const email_sent =( await UserService.of(user).sendVerificationEmail(true)).sent;
 
       return res.json({ sent: email_sent });
     } catch (err) {
@@ -97,7 +97,7 @@ class ApiAccountController {
         true
       );
 
-      return res.json({ sent: email_sent });
+      return res.json({ sent: email_sent.sent });
     } catch (err) {
       console.log(err);
       res.status(400).json({ error: err.message });

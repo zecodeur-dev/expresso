@@ -1,0 +1,10 @@
+<script>
+  function toogleMenu({
+    id,
+    toogle
+  }) {
+    const target = document.getElementById(id);
+    if (!target) return;
+    target.classList.toggle(toogle ?? "-translate-x-full")
+  }
+</script>

@@ -5,7 +5,7 @@ const {
   Links,
 } = require("@models/linkModel");
 const Utils = require("../../utils");
-const DateService = require("../date");
+const DateService = require("../date/date.service");
 
 /**
  * Service for managing verification, password reset and other types of link

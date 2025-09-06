@@ -82,17 +82,30 @@
               if (script.src) {
                 newScript.src = script.src;
               } else {
-                newScript.textContent = script.textContent;
+                newScript.textContent = `(function(){${script.textContent}})()`;
               }
               newScript.setAttribute("_dynamic", true);
-              document.body.appendChild(newScript);
-
+              setTimeout(() => document.body.appendChild(newScript), 20);
               script.remove();
             });
 
             contentParser.querySelectorAll("[_static]").forEach(s => s.remove());
 
             l.target.innerHTML = contentParser.body.innerHTML;
+
+            // refresh scripts
+            document.querySelectorAll("script").forEach((oldScript) => {
+
+              const newScript = document.createElement("script");
+
+              [...oldScript.attributes].forEach(attr =>
+                newScript.setAttribute(attr.name, attr.value)
+              );
+
+              const encapsulated = oldScript.textContent.startsWith("(function(){") && oldScript.textContent.endsWith("})()");
+              newScript.textContent = encapsulated ? oldScript.textContent : `(function(){${oldScript.textContent}})()`;
+              oldScript.replaceWith(newScript);
+            });
 
             setListeners();
           } else {

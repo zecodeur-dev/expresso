@@ -1,4 +1,4 @@
-const LangService = require("@services/lang");
+const LangService = require("@/app/services/lang/lang.service");
 const Utils = require("../utils");
 
 // 100 requests per min

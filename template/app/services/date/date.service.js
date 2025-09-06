@@ -1,4 +1,4 @@
-const LangService = require("../lang");
+const LangService = require("../lang/lang.service");
 
 /**
  * Service for handling date-related operations, such as formatting dates, adding time to dates,

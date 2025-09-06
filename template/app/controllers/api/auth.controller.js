@@ -1,7 +1,7 @@
 const Errors = require("../../../config/errors");
 const User = require("@models/userModel");
-const AuthService = require("@services/auth");
-const MailService = require("@services/mail");
+const AuthService = require("@/app/services/auth/auth.service");
+const MailService = require("@/app/services/mail/mail.service");
 
 class ApiAuthController {
   static async login(req, res) {

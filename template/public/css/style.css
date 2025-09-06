@@ -652,8 +652,8 @@ video {
   z-index: -10;
 }
 
-.z-0 {
-  z-index: 0;
+.-z-20 {
+  z-index: -20;
 }
 
 .z-10 {
@@ -704,6 +704,10 @@ video {
 
 .inline-flex {
   display: inline-flex;
+}
+
+.contents {
+  display: contents;
 }
 
 .hidden {
@@ -1243,12 +1247,10 @@ video {
   transition-duration: 200ms;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-* {
+*,
+  html {
   font-family: "Geist";
+  scroll-behavior: smooth !important;
 }
 
 body {
@@ -1340,6 +1342,7 @@ input:-webkit-autofill,
 button {
   display: inline-flex;
   height: 2rem;
+  cursor: pointer;
   align-items: center;
   justify-content: center;
   border-radius: 0.375rem;
@@ -1470,6 +1473,46 @@ summary::-webkit-details-marker {
   display: none;
 }
 
+.tab > .tab-header {
+  display: flex;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(241 245 249 / var(--tw-bg-opacity, 1));
+  padding: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+}
+
+.tab > .tab-header:is(.dark *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(2 6 23 / var(--tw-bg-opacity, 1));
+}
+
+.tab > .tab-header > * {
+  flex: 1 1 0%;
+  background-color: transparent;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: var(--muted-foreground);
+}
+
+.tab > .tab-header > .active {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.tab > .tab-content {
+  display: none;
+}
+
+.tab > .tab-content.active {
+  display: block;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #16161d;
@@ -1491,7 +1534,7 @@ summary::-webkit-details-marker {
   --border: #adadc85b;
   --input: var(--border);
   --destructive: #b41e07;
-  --destructive-foreground: #000000;
+  --destructive-foreground: #ffffff;
   --ring: var(--primary);
   --info: #729af1;
   --success: #218143;
@@ -1534,8 +1577,9 @@ summary::-webkit-details-marker {
   --muted: #141423;
   --muted-foreground: #f8f7ffd4;
   --card: #1a2026;
+  --card-foreground: #ffffff;
   --destructive: #b41e07;
-  --destructive-foreground: #6e2924;
+  --destructive-foreground: #ffffff;
   --border: #bdb7d02e;
   --input: var(--border);
   --ring: #a282ff;

@@ -10,8 +10,8 @@ const apiRoutes = require("@routes/api");
 const logger = require("@utils/logger");
 const errorHandler = require("@middlewares/errorHandler");
 const ROUTES = require("@routes/routes");
-const { connect } = require("@services/db");
-const { getRoutes, logRoutes } = require("@services/routes");
+const { connect } = require("@/app/services/db/db.service");
+const { getRoutes, logRoutes } = require("@/app/services/routes/routes.service");
 const { toMs } = require("@utils/index");
 
 const limiter = require("@middlewares/limiter");
